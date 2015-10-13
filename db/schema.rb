@@ -14,7 +14,7 @@
 ActiveRecord::Schema.define(version: 20151013222801) do
 
   create_table "tokens", force: :cascade do |t|
-    t.string   "user_id",       null: false
+    t.string   "user_id"
     t.string   "uid",           null: false
     t.string   "access_token"
     t.string   "refresh_token"
