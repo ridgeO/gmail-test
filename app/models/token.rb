@@ -8,7 +8,7 @@ class Token < ActiveRecord::Base
 
     def from_omniauth(auth_hash)
       token = find_or_create_by(uid: auth_hash["uid"])
-      token.access_token = auth_hash["credentials"]["access_token"]
+      token.access_token = auth_hash["credentials"]["token"]
       token.refresh_token = auth_hash["credentials"]["refresh_token"]
       token.expires_at = auth_hash["credentials"]["expires_at"]
       token.save!
