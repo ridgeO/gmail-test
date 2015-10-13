@@ -39,7 +39,7 @@ class Token < ActiveRecord::Base
 
     def first_round(auth_hash)
       token = find_or_create_by(uid: auth_hash["uid"])
-      token.authorization_code = request['code']
+      token.authorization_code = request.env['code']
       token.save!
       token.fresh_token
     end
