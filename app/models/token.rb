@@ -4,17 +4,6 @@ require 'json'
 
 class Token < ActiveRecord::Base
 
-  class << self
-
-    def from_omniauth(auth_hash)
-      token = find_or_create_by(uid: auth_hash["uid"])
-      token.authorization_code = auth_hash["credentials"]["authorization_code"]
-      token.save!
-      token
-    end
-
-  end
-
   def to_params
     {'code' => authorization_code,
     'client_id' => ENV['CLIENT_ID'],
@@ -44,6 +33,17 @@ class Token < ActiveRecord::Base
   def fresh_token
     refresh! if expired?
     access_token
+  end
+
+  class << self
+
+    def first_round(auth_hash)
+      token = find_or_create_by(uid: auth_hash["uid"])
+      token.authorization_code = request['code']
+      token.save!
+      token.fresh_token
+    end
+
   end
 
 end
