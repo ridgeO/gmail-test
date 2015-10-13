@@ -7,8 +7,8 @@ class User < ActiveRecord::Base
       user.location = auth_hash["info"]["location"]
       user.image_url = auth_hash["info"]["image"]
       user.url = auth_hash["info"]["urls"][user.provider.capitalize]
-      user.access_toke = auth_hash["credentials"]["access_token"]
-      user.reset_token = auth_hash["credentials"]["reset_token"]
+      user.access_toke = auth_hash["credentials"]["token"]
+      user.reset_token = auth_hash["credentials"]["refresh_token"]
       user.expires_at = Time.at(auth_hash["credentials"]["expires_at"]).to_datetime
       user.save!
       user
