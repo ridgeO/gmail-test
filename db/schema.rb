@@ -15,12 +15,13 @@ ActiveRecord::Schema.define(version: 20151013222801) do
 
   create_table "tokens", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "uid",           null: false
+    t.string   "uid",                null: false
+    t.string   "authorization_code"
     t.string   "access_token"
     t.string   "refresh_token"
     t.datetime "expires_at"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
   end
 
   create_table "users", force: :cascade do |t|

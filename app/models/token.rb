@@ -8,9 +8,7 @@ class Token < ActiveRecord::Base
 
     def from_omniauth(auth_hash)
       token = find_or_create_by(uid: auth_hash["uid"])
-      token.access_token = auth_hash["credentials"]["token"]
-      token.refresh_token = auth_hash["credentials"]["refresh_token"]
-      token.expires_at = auth_hash["credentials"]["expires_at"]
+      token.authorization_code = auth_hash["credentials"]["authorization_code"]
       token.save!
       token
     end
@@ -18,10 +16,11 @@ class Token < ActiveRecord::Base
   end
 
   def to_params
-    {'refresh_token' => refresh_token,
+    {'code' => authorization_code,
     'client_id' => ENV['CLIENT_ID'],
     'client_secret' => ENV['CLIENT_SECRET'],
-    'grant_type' => 'refresh_token'}
+    'redirect_uri' => 'redirect_uri',
+    'grant_type' => 'authorization_code'}
   end
 
   def request_token_from_google
@@ -34,6 +33,7 @@ class Token < ActiveRecord::Base
     data = JSON.parse(response.body)
     update_attributes(
     access_token: data['access_token'],
+    refresh_token: data['refresh_token'],
     expires_at: Time.now + (data['expires_in'].to_i).seconds)
   end
 
