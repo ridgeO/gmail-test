@@ -7,6 +7,9 @@ class User < ActiveRecord::Base
       user.location = auth_hash["info"]["location"]
       user.image_url = auth_hash["info"]["image"]
       user.url = auth_hash["info"]["urls"][user.provider.capitalize]
+      user.access_toke = auth_hash["credentials"]["access_token"]
+      user.reset_token = auth_hash["credentials"]["reset_token"]
+      user.expires_at = auth_hash["credentials"]["expires_at"]
       user.save!
       user
     end
