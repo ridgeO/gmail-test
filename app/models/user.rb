@@ -18,35 +18,35 @@ class User < ActiveRecord::Base
       user
     end
 
-    def to_params
-      {'refresh_token' => user.refresh_token,
-      'client_id' => ENV['CLIENT_ID'],
-      'client_secret' => ENV['CLIENT_SECRET'],
-      'grant_type' => 'refresh_token'}
-    end
+  end
 
-    def request_token_from_google
-      url = URI("https://accounts.google.com/o/oauth2/token")
-      Net::HTTP.post_form(url, self.to_params)
-    end
+  def to_params(user)
+    {'refresh_token' => user.refresh_token,
+    'client_id' => ENV['CLIENT_ID'],
+    'client_secret' => ENV['CLIENT_SECRET'],
+    'grant_type' => 'refresh_token'}
+  end
 
-    def refresh!
-      response = request_token_from_google
-      data = JSON.parse(response.body)
-      user.update_attributes(
-      access_token: data['access_token'],
-      expires_at: Time.now + (data['expires_in'].to_i).seconds)
-    end
+  def request_token_from_google
+    url = URI("https://accounts.google.com/o/oauth2/token")
+    Net::HTTP.post_form(url, self.to_params)
+  end
 
-    def expired?
-      user.expires_at < Time.now
-    end
+  def refresh!(user)
+    response = request_token_from_google
+    data = JSON.parse(response.body)
+    user.update_attributes(
+    access_token: data['access_token'],
+    expires_at: Time.now + (data['expires_in'].to_i).seconds)
+  end
 
-    def fresh_token
-      refresh! if expired?
-      access_token
-    end
-    
+  def expired?(user)
+    user.expires_at < Time.now
+  end
+
+  def fresh_token(user)
+    user.refresh! if user.expired?
+    access_token
   end
 
 end
