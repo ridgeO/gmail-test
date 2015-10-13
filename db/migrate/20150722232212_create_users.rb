@@ -8,7 +8,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :image_url
       t.string :url
       t.string :access_token
-      t.string :reset_token
+      t.string :refresh_token
       t.datetime :expires_at
       t.timestamps null: false
     end
